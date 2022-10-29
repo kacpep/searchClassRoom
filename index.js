@@ -58,21 +58,20 @@ let getClass = (planAllClass, i, td, tr, th) => {
 			if (a > 1) {
 				// console.log(planAllClass[i].plane[td].children[tr].children);
 				if (planAllClass[i].plane[td].children[tr].children.length > 3) {
-					console.log(
+			
+					return [
 						planAllClass[i].plane[td].children[tr].children[2].children[0]
-							.content
-					);
-
-					return planAllClass[i].plane[td].children[tr].children[2].children[0]
-						.content;
+							.content,
+						planAllClass[i].plane[td].children[tr].children[5].children[4]
+							.children[0].content,
+					];
 				} else {
-					return (
+					return [
 						planAllClass[i].plane[td].children[tr].children[0].children[4]
-							.children[0].content +
-						"/" +
+							.children[0].content,
 						planAllClass[i].plane[td].children[tr].children[2].children[4]
-							.children[0].content
-					);
+							.children[0].content,
+					];
 				}
 			} else {
 				return planAllClass[i].plane[td].children[tr].children[th].children[4]
@@ -158,16 +157,7 @@ axios
 				plane: planClass,
 			});
 		}
-		let allRooms = [];
 		let planRooms = [];
-		weekDay = [
-			"Monday",
-			"Tuesday",
-			"Wednesday",
-			"Thursday",
-			"Friday",
-			"Friday",
-		];
 
 		for (let i in planAllClass) {
 			for (let td = 0; planAllClass[i].plane.length > td; td++) {
@@ -184,23 +174,23 @@ axios
 									let nowClass = getClass(planAllClass, i, td, tr, th);
 
 									day = getDay(planAllClass, i, td, tr, th);
-									// check = planRooms.filter(
-									// 	(item) =>
-									// 		item.numberLesson == nowLesson &&
-									// 		item.classRoom == nowClass &&
-									// 		item.class == planAllClass[i].class &&
-									// 		item.day == day
-									// );
-									// if (check[0] == undefined) {
-									if (day != undefined) {
-										planRooms.push({
-											numberLesson: nowLesson,
-											classRoom: nowClass,
-											class: planAllClass[i].class,
-											day: day,
-										});
+									check = planRooms.filter(
+										(item) =>
+											item.numberLesson == nowLesson &&
+											item.classRoom == nowClass &&
+											item.class == planAllClass[i].class &&
+											item.day == day
+									);
+									if (check[0] == undefined) {
+										if (day != undefined) {
+											planRooms.push({
+												numberLesson: nowLesson,
+												classRoom: nowClass,
+												class: planAllClass[i].class,
+												day: day,
+											});
+										}
 									}
-									// }
 								}
 							}
 						}
@@ -210,16 +200,28 @@ axios
 		}
 		console.log(planRooms);
 
-		let searchClass = "#PR1";
+		let searchClass = "73";
 		let lesson = 4;
-		let searchDay = "Poniedziałek";
+		let searchDay = "Środa";
 		for (i in planRooms) {
-			if (
-				planRooms[i].classRoom == searchClass &&
-				planRooms[i].numberLesson == lesson &&
-				planRooms[i].day == searchDay
-			) {
-				console.log(planRooms[i]);
+			if (typeof planRooms[i].classRoom == "object") {
+				for (r in planRooms[i].classRoom) {
+					if (
+						planRooms[i].classRoom[r] == searchClass &&
+						planRooms[i].numberLesson == lesson &&
+						planRooms[i].day == searchDay
+					) {
+						console.log(planRooms[i]);
+					}
+				}
+			} else {
+				if (
+					planRooms[i].classRoom == searchClass &&
+					planRooms[i].numberLesson == lesson &&
+					planRooms[i].day == searchDay
+				) {
+					console.log(planRooms[i]);
+				}
 			}
 		}
 	})
