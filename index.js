@@ -1,5 +1,70 @@
 const axios = require("axios").default;
 var himalaya = require("himalaya");
+const express = require("express");
+const cors = require("cors");
+
+let app = express();
+app.use(cors());
+app.use(express.json());
+
+var planRooms = "";
+//this query: 
+//http://127.0.0.1:8888/search?searchClass=18&searchDay=1&lesson=1
+app.listen(8888, async () => {
+	planRooms = await arrayTableAllClassRooms;
+	console.log(`start`);
+});
+
+app.use("/search", async (req, res) => {
+	if (planRooms != "") {
+		let data = req.query;
+		if (
+			"searchClass" in data &&
+			"lesson" in data &&
+			"searchDay" in data &&
+			Object.keys(data).length == 3
+		) {
+			let searchClass = data.searchClass;
+			if (searchClass == "PR1") {
+				searchClass = "#" + searchClass;
+			}
+
+			let lesson = data.lesson;
+			weekday = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"];
+			if (data.searchDay > 4) {
+				return res.send("wrong day!");
+			}
+			let searchDay = weekday[data.searchDay];
+
+			for (i in planRooms) {
+				if (typeof planRooms[i].classRoom == "object") {
+					for (r in planRooms[i].classRoom) {
+						if (
+							planRooms[i].classRoom[r] == searchClass &&
+							planRooms[i].numberLesson == lesson &&
+							planRooms[i].day == searchDay
+						) {
+							return res.status(200).json(planRooms[i]);
+						}
+					}
+				} else {
+					if (
+						planRooms[i].classRoom == searchClass &&
+						planRooms[i].numberLesson == lesson &&
+						planRooms[i].day == searchDay
+					) {
+						return res.status(200).json(planRooms[i]);
+					}
+				}
+			}
+			res.status(200).json({ error: "nobody has lesson in classRoom" });
+		} else {
+			res.status(500).json({ error: "bad query" });
+		}
+	} else {
+		res.status(500).json({ error: "SERVER STARTING.." });
+	}
+});
 
 const getAllTime = (allTime, planAllClass, i, td, tr, th) => {
 	if (
@@ -58,7 +123,6 @@ let getClass = (planAllClass, i, td, tr, th) => {
 			if (a > 1) {
 				// console.log(planAllClass[i].plane[td].children[tr].children);
 				if (planAllClass[i].plane[td].children[tr].children.length > 3) {
-			
 					return [
 						planAllClass[i].plane[td].children[tr].children[2].children[0]
 							.content,
@@ -87,16 +151,10 @@ let getClass = (planAllClass, i, td, tr, th) => {
 		// 		planAllClass[i].plane[td].children[tr].children[th].children[0].content
 		// );
 	} else {
-		if (
-			planAllClass[i].plane[td].children[tr].children[th].content == "&nbsp;"
-		) {
-			return "free";
-		} else {
-			return 0;
-		}
+		return 0;
 	}
 };
-axios
+let arrayTableAllClassRooms = axios
 	.get("http://www.zstrzeszow.pl/plan/lista.html")
 	.then(async (response) => {
 		html = response.data;
@@ -198,32 +256,8 @@ axios
 				}
 			}
 		}
-		console.log(planRooms);
-
-		let searchClass = "73";
-		let lesson = 4;
-		let searchDay = "Środa";
-		for (i in planRooms) {
-			if (typeof planRooms[i].classRoom == "object") {
-				for (r in planRooms[i].classRoom) {
-					if (
-						planRooms[i].classRoom[r] == searchClass &&
-						planRooms[i].numberLesson == lesson &&
-						planRooms[i].day == searchDay
-					) {
-						console.log(planRooms[i]);
-					}
-				}
-			} else {
-				if (
-					planRooms[i].classRoom == searchClass &&
-					planRooms[i].numberLesson == lesson &&
-					planRooms[i].day == searchDay
-				) {
-					console.log(planRooms[i]);
-				}
-			}
-		}
+		// console.log(planRooms);
+		return planRooms;
 	})
 	.catch(function (error) {
 		// handle error
