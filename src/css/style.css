@@ -1,0 +1,202 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+body {
+	background: #000;
+	color: #fff;
+	overflow: hidden;
+	font-family: "Raleway", sans-serif;
+}
+a {
+	color: inherit;
+	text-decoration: none;
+	transition: color 0.1s, border-bottom 0.1s;
+}
+footer a {
+	border-bottom: 1px dotted rgb(179, 179, 179);
+}
+a:hover {
+	color: rgba(179, 179, 179, 0.412);
+	border-bottom: none;
+}
+
+main {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+h1 {
+	color: #fff;
+	font-family: monospace;
+	letter-spacing: 2px;
+	font-weight: 300;
+	font-size: 30px;
+}
+
+p {
+	color: rgb(179, 179, 179);
+	margin-bottom: 20px;
+	animation: fadeIn 1s;
+	min-width: 300px;
+	max-width: 430px;
+	text-align: center;
+}
+h4 {
+	font-weight: 600;
+	animation: fadeIn 1s;
+}
+.icons {
+	width: 40px;
+	margin-right: 10px;
+}
+footer {
+	color: rgb(179, 179, 179);
+	font-size: 10px;
+	position: absolute;
+	bottom: 10px;
+	right: 4px;
+}
+.inputs {
+	animation: fadeIn 1s;
+}
+.input {
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.input:first-child {
+	display: flex;
+}
+.input input {
+	margin-left: 10px;
+	padding: 2px 5px;
+}
+.input p {
+	font-size: 12px;
+	text-align: left;
+	margin-bottom: 0;
+	font-family: monospace;
+}
+.left {
+	display: flex;
+	flex-direction: column;
+}
+
+.result {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+	display: none;
+	/* animation: fadeIn 1s; */
+}
+.result h4 {
+	font-weight: 400;
+	margin-right: 20px;
+}
+.result span {
+	/* display: flex; */
+	align-items: flex-start;
+}
+.result span a {
+	font-family: monospace;
+	font-size: 20px;
+	color: rgb(179, 179, 179);
+	text-decoration: underline;
+}
+.result span a:hover {
+	
+	color: rgb(119, 119, 119);
+	text-decoration: underline;
+}
+.error {
+	display: none;
+	color: #f00;
+	animation: fadeIn 1s;
+
+}
+.button {
+	border: #fff solid 1px;
+	padding: 5px 20px;
+	width: 100px;
+	text-align: center;
+	cursor: pointer;
+	transition: background-color 0.4s, width 0.5s, color 0.5s;
+}
+.button:hover {
+	background-color: #fff;
+	width: 130px;
+	color: #000;
+	font-weight: 600;
+}
+.magnifier {
+	margin-left: 6px;
+	opacity: 0%;
+	transition: opacity 0.3s;
+	margin-right: -24px;
+}
+.button:hover .magnifier {
+	opacity: 100%;
+}
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+		margin-top: 20px;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@media only screen and (max-width: 960px) {
+	h1 {
+		font-size: 30px;
+	}
+	h4 {
+		font-size: 15px;
+	}
+	li {
+		font-size: 13px;
+	}
+	p {
+		font-size: 14px;
+	}
+
+	.icons {
+		width: 34px;
+		margin-right: 10px;
+	}
+}
+
+@media only screen and (max-width: 562px) {
+	.input {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.input input {
+		margin-left: 0;
+		width: 100%;
+	}
+	.right {
+		margin-top: 10px;
+		width: 100%;
+
+	}
+	.buttons {
+		justify-content: flex-start;
+	}
+}
