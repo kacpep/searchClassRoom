@@ -9,15 +9,15 @@ app.use(express.json());
 
 var planRooms = "";
 //this query:
-//http://127.0.0.1:8888/search?searchClass=18&searchDay=1&lesson=1
-app.listen(8888, async () => {
+//http://127.0.0.1:3000/search?searchClass=18&searchDay=1&lesson=1
+app.listen(3000, async () => {
 	//start server and get all class lesson
 	planRooms = await arrayTableAllClassRooms;
 	console.log(`start`);
 });
 
-app.use("/search", async (req, res) => {
-	//create api /search
+app.use("/", async (req, res) => {
+	//create api /
 	if (planRooms != "") {
 		let data = req.query;
 		//all data query

@@ -20,7 +20,7 @@ which class he was from
 
 ## Demo
 
-http://37.233.101.196/
+https://finder.kacpep.dev/
 
 
 ## Author 😎

@@ -48,9 +48,9 @@ let getClass = async () => {
 
 		if (vaildDay && vaildLesson) {
 			let info = "";
-			//my server http://37.233.101.196:8888/search
+			//my server https://webs.k-k.p4.tiktalik.io/
 			info = await fetch(
-				`http://37.233.101.196:8888/search?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}`
+				`https://webs.k-k.p4.tiktalik.io/?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}`
 			).then(async (res) => {
 				return [await res.json(), await res.status];
 			});
