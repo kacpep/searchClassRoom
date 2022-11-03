@@ -13,7 +13,7 @@ which class he was from
 #### Get class name
 
 ```http
-  GET /search?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}
+  GET ?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}
 ```
 
 
