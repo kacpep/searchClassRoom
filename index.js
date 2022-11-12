@@ -235,7 +235,7 @@ let getClass = (planAllClass, i, td, tr, th) => {
 	}
 };
 let arrayTableAllClassRooms = axios
-	.get("http://sp5.resman.pl/plan/lista.html") //get all class
+	.get("http://www.zstrzeszow.pl/plan/lista.html") //get all class
 
 	.then(async (response) => {
 		html = response.data;
@@ -262,7 +262,7 @@ let arrayTableAllClassRooms = axios
 		for (let i in allLinks) {
 			allClass.push(
 				await axios
-					.get("https://sp5.resman.pl/plan/" + allLinks[i]) //get all table class
+					.get("http://www.zstrzeszow.pl/plan/" + allLinks[i]) //get all table class
 					.then((response) => {
 						html = response.data;
 
