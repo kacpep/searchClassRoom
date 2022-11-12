@@ -104,10 +104,10 @@ let getClass = async () => {
 						break;
 				}
 			} else {
-				errorVisible("bad lesson(1-15)");
+				errorVisible("błędna wartość lekcji");
 			}
 		} else {
-			errorVisible("inputs cannot be empty");
+			errorVisible("pola nie mogą być puste");
 		}
 	} else {
 		let searchClass = searchClassInput[1].value;
@@ -136,7 +136,7 @@ let getClass = async () => {
 							resultVisible();
 							console.log(info);
 							foundClass.innerHTML = "";
-							h4.textContent = "Te kalsy mają tu lekcje:";
+							h4.textContent = "W tej sali lekcje mają:";
 							result.style.flexDirection = "column";
 							foundClass.style.marginTop = "20px";
 							let elUl = document.createElement("ul"); //craete element
@@ -160,10 +160,10 @@ let getClass = async () => {
 						break;
 				}
 			} else {
-				errorVisible("error day");
+				errorVisible("błędny dzień");
 			}
 		} else {
-			errorVisible("inputs cannot be empty");
+			errorVisible("pola nie mogą być puste");
 		}
 	}
 };

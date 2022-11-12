@@ -2,10 +2,16 @@ const axios = require("axios").default;
 var himalaya = require("himalaya");
 const express = require("express");
 const cors = require("cors");
+// const https = require("https"); 
 
 let app = express();
 app.use(cors());
 app.use(express.json());
+// const httpsAgent = new https.Agent({
+// 	rejectUnauthorized: false,
+// });
+// axios.defaults.httpsAgent = httpsAgent;
+//if website is https (paln school)
 
 var planRooms = "";
 //this query:
@@ -39,7 +45,7 @@ app.use("/nameClass", async (req, res) => {
 			//week day
 			if (data.searchDay > 4) {
 				//validation day number
-				return res.status(200).json({ error: "wrong day!" });
+				return res.status(200).json({ error: "Zły dzień!" });
 			}
 			let searchDay = weekday[data.searchDay];
 
@@ -66,7 +72,7 @@ app.use("/nameClass", async (req, res) => {
 					}
 				}
 			}
-			res.status(200).json({ error: "nobody has lesson in classRoom" });
+			res.status(200).json({ error: "Nikt nie ma lekcji w tej sali!" });
 		} else {
 			res.status(500).json({ error: "bad query!!" });
 		}
@@ -97,7 +103,7 @@ app.use("/class", async (req, res) => {
 			//week day
 			if (data.searchDay > 4) {
 				//validation day number
-				return res.status(200).json({ error: "wrong day!" });
+				return res.status(200).json({ error: "Zły dzień!" });
 			}
 
 			let searchDay = weekday[data.searchDay];
@@ -113,7 +119,7 @@ app.use("/class", async (req, res) => {
 						) {
 							let test = dayLesson.filter(
 								(item) => JSON.stringify(item) === JSON.stringify(planRooms[i])
-							);//fix bugs to adding 2x 
+							); //fix bugs to adding 2x
 							if (test.length == 0) {
 								dayLesson.push(planRooms[i]);
 							}
@@ -128,12 +134,13 @@ app.use("/class", async (req, res) => {
 					}
 				}
 			}
-			if (dayLesson.length == 0) { //no lesson in day
-				res.status(200).json({ error: "no lesson" });
+			if (dayLesson.length == 0) {
+				//no lesson in day
+				res.status(200).json({ error: "Brak lekcji!" });
 			} else {
 				res
 					.status(200)
-					.json(dayLesson.sort((a, b) => a.numberLesson - b.numberLesson));//sort by number lesson 
+					.json(dayLesson.sort((a, b) => a.numberLesson - b.numberLesson)); //sort by number lesson
 			}
 		} else {
 			res.status(500).json({ error: "bad query!!" });
@@ -228,7 +235,7 @@ let getClass = (planAllClass, i, td, tr, th) => {
 	}
 };
 let arrayTableAllClassRooms = axios
-	.get("http://www.zstrzeszow.pl/plan/lista.html") //get all class
+	.get("http://sp5.resman.pl/plan/lista.html") //get all class
 
 	.then(async (response) => {
 		html = response.data;
@@ -255,7 +262,7 @@ let arrayTableAllClassRooms = axios
 		for (let i in allLinks) {
 			allClass.push(
 				await axios
-					.get("http://www.zstrzeszow.pl/plan/" + allLinks[i]) //get all table class
+					.get("https://sp5.resman.pl/plan/" + allLinks[i]) //get all table class
 					.then((response) => {
 						html = response.data;
 
