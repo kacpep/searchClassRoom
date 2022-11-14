@@ -182,6 +182,8 @@ bnt.addEventListener("click", () => {
 let toogle = document.getElementById("toggle");
 let tooglesIntputs = document.querySelectorAll(".inputs");
 
+let allPToogle = document.querySelectorAll(".option p");
+
 toogle.addEventListener("click", async () => {
 	//change option searching
 	foundClass.innerHTML = "";
@@ -192,6 +194,9 @@ toogle.addEventListener("click", async () => {
 		tooglesIntputs[0].classList.add("animation-out");
 		tooglesIntputs[1].classList.remove("animation-in");
 
+		allPToogle[1].classList.remove("active");
+		allPToogle[0].classList.add("active");
+
 		setTimeout(() => {
 			tooglesIntputs[0].classList.add("d-none");
 			tooglesIntputs[0].classList.remove("animation-out");
@@ -201,6 +206,9 @@ toogle.addEventListener("click", async () => {
 	} else {
 		tooglesIntputs[1].classList.add("animation-out");
 		tooglesIntputs[0].classList.remove("animation-in");
+
+		allPToogle[0].classList.remove("active");
+		allPToogle[1].classList.add("active");
 
 		setTimeout(() => {
 			tooglesIntputs[1].classList.add("d-none");
