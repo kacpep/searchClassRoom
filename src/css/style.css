@@ -44,7 +44,6 @@ h1 {
 p {
 	color: rgb(179, 179, 179);
 	margin-bottom: 20px;
-	animation: fadeIn 1s;
 	min-width: 300px;
 	max-width: 430px;
 	text-align: center;
@@ -52,6 +51,9 @@ p {
 h4 {
 	font-weight: 600;
 	animation: fadeIn 1s;
+}
+.box {
+	animation: fadeIn 1s 1;
 }
 .icons {
 	width: 40px;
@@ -64,9 +66,7 @@ footer {
 	bottom: 10px;
 	right: 4px;
 }
-.inputs {
-	animation: fadeIn 1s;
-}
+
 .input {
 	margin-bottom: 10px;
 	display: flex;
@@ -79,6 +79,87 @@ footer {
 .input input {
 	margin-left: 10px;
 	padding: 2px 5px;
+	background-color: #fff;
+}
+.day {
+	margin-left: 10px;
+	padding: 2px 5px;
+	cursor: pointer;
+	background-color: #fff;
+}
+.day {
+	width: calc(100% - 10px);
+}
+
+.option .checked-option input[type="checkbox"] {
+	visibility: hidden;
+}
+.option .checked-option input[type="checkbox"]:checked + label {
+	transform: rotate(360deg);
+}
+.option .checked-option input[type="checkbox"]:checked + label:before {
+	transform: translateX(29px);
+}
+
+.option .checked-option label {
+	display: flex;
+	width: 60px;
+	height: 30px;
+	border: 3px solid;
+	border-radius: 99em;
+	position: relative;
+	transition: transform 0.75s ease-in-out;
+	transform-origin: 50% 50%;
+	cursor: pointer;
+}
+.checked-option {
+	display: flex;
+	margin-right: 13px;
+}
+.option .checked-option label:before {
+	transition: transform 0.75s ease;
+	transition-delay: 0.5s;
+	content: "";
+	display: block;
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	background-color: #fff;
+	border-radius: 50%;
+	top: 5px;
+	left: 5px;
+}
+
+.option--class {
+	display: none;
+}
+.option {
+	margin: 5px 0 30px 0;
+	display: flex;
+	align-items: center;
+}
+.option p {
+	margin-bottom: 0;
+	min-width: 0;
+	max-width: 200;
+	color: #fff;
+}
+p.active {
+	color: rgb(108, 108, 108);
+}
+.d-none {
+	display: none;
+	transform: translateX(500px);
+}
+.d-block {
+	display: block;
+}
+.animation-out {
+	transition: transform 0.4s;
+	transform: translateX(-500px);
+}
+.animation-in {
+	animation: animation-in 0.4s;
 }
 .input p {
 	font-size: 12px;
@@ -90,10 +171,11 @@ footer {
 	display: flex;
 	flex-direction: column;
 }
-
+.right {
+	width: 100%;
+}
 .result {
 	display: flex;
-	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	margin-top: 20px;
@@ -114,8 +196,20 @@ footer {
 	color: rgb(179, 179, 179);
 	text-decoration: underline;
 }
+.result span li {
+	font-family: monospace;
+	font-size: 20px;
+	color: rgb(179, 179, 179);
+	display: flex;
+	justify-content: space-between;
+}
+.result span li a {
+	margin-left: 10px;
+}
+.result span ul {
+	list-style: none;
+}
 .result span a:hover {
-	
 	color: rgb(119, 119, 119);
 	text-decoration: underline;
 }
@@ -123,7 +217,6 @@ footer {
 	display: none;
 	color: #f00;
 	animation: fadeIn 1s;
-
 }
 .button {
 	border: #fff solid 1px;
@@ -162,6 +255,14 @@ footer {
 		opacity: 1;
 	}
 }
+@keyframes animation-in {
+	0% {
+		transform: translateX(500px);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
 @media only screen and (max-width: 960px) {
 	h1 {
 		font-size: 30px;
@@ -174,6 +275,20 @@ footer {
 	}
 	p {
 		font-size: 14px;
+	}
+	.option .checked-option input[type="checkbox"]:checked + label:before {
+		transform: translateX(29px);
+	}
+	.option .checked-option label:before {
+		width: 10px;
+		height: 10px;
+
+		top: 4px;
+		left: 3px;
+	}
+	.option .checked-option label {
+		width: 50px;
+		height: 25px;
 	}
 
 	.icons {
@@ -191,10 +306,13 @@ footer {
 		margin-left: 0;
 		width: 100%;
 	}
+	.day {
+		margin-left: 0;
+		width: 100%;
+	}
 	.right {
 		margin-top: 10px;
 		width: 100%;
-
 	}
 	.buttons {
 		justify-content: flex-start;

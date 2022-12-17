@@ -2,21 +2,27 @@ const axios = require("axios").default;
 var himalaya = require("himalaya");
 const express = require("express");
 const cors = require("cors");
+// const https = require("https"); 
 
 let app = express();
 app.use(cors());
 app.use(express.json());
+// const httpsAgent = new https.Agent({
+// 	rejectUnauthorized: false,
+// });
+// axios.defaults.httpsAgent = httpsAgent;
+//if website is https (paln school)
 
 var planRooms = "";
 //this query:
-//http://127.0.0.1:3000/search?searchClass=18&searchDay=1&lesson=1
+//http://127.0.0.1:3000/nameClass?searchClass=18&searchDay=1&lesson=1
 app.listen(3000, async () => {
 	//start server and get all class lesson
 	planRooms = await arrayTableAllClassRooms;
 	console.log(`start`);
 });
 
-app.use("/", async (req, res) => {
+app.use("/nameClass", async (req, res) => {
 	//create api /
 	if (planRooms != "") {
 		let data = req.query;
@@ -39,7 +45,7 @@ app.use("/", async (req, res) => {
 			//week day
 			if (data.searchDay > 4) {
 				//validation day number
-				return res.send("wrong day!");
+				return res.status(200).json({ error: "Zły dzień!" });
 			}
 			let searchDay = weekday[data.searchDay];
 
@@ -66,7 +72,76 @@ app.use("/", async (req, res) => {
 					}
 				}
 			}
-			res.status(420).json({ error: "nobody has lesson in classRoom" });
+			res.status(200).json({ error: "Nikt nie ma lekcji w tej sali!" });
+		} else {
+			res.status(500).json({ error: "bad query!!" });
+		}
+	} else {
+		res.status(500).json({ error: "SERVER STARTING.." });
+	}
+});
+//this query:
+//http://127.0.0.1:3000/class?searchClass=77&searchDay=1
+app.use("/class", async (req, res) => {
+	//create api /
+	if (planRooms != "") {
+		let data = req.query;
+		//all data query
+		if (
+			"searchClass" in data &&
+			"searchDay" in data &&
+			Object.keys(data).length == 2
+		) {
+			//check query is correct
+			let searchClass = data.searchClass;
+			//repere class because query url not accepts #
+			if (searchClass == "PR1") {
+				searchClass = "#" + searchClass;
+			}
+
+			weekday = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"];
+			//week day
+			if (data.searchDay > 4) {
+				//validation day number
+				return res.status(200).json({ error: "Zły dzień!" });
+			}
+
+			let searchDay = weekday[data.searchDay];
+			let dayLesson = [];
+			for (i in planRooms) {
+				//search all
+				if (typeof planRooms[i].classRoom == "object") {
+					//cheking 2 classes in one lesson
+					for (r in planRooms[i].classRoom) {
+						if (
+							planRooms[i].classRoom[r] == searchClass &&
+							planRooms[i].day == searchDay
+						) {
+							let test = dayLesson.filter(
+								(item) => JSON.stringify(item) === JSON.stringify(planRooms[i])
+							); //fix bugs to adding 2x
+							if (test.length == 0) {
+								dayLesson.push(planRooms[i]);
+							}
+						}
+					}
+				} else {
+					if (
+						planRooms[i].classRoom == searchClass &&
+						planRooms[i].day == searchDay
+					) {
+						dayLesson.push(planRooms[i]);
+					}
+				}
+			}
+			if (dayLesson.length == 0) {
+				//no lesson in day
+				res.status(200).json({ error: "Brak lekcji!" });
+			} else {
+				res
+					.status(200)
+					.json(dayLesson.sort((a, b) => a.numberLesson - b.numberLesson)); //sort by number lesson
+			}
 		} else {
 			res.status(500).json({ error: "bad query!!" });
 		}

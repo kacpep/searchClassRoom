@@ -39,60 +39,116 @@
 
     <main>
         <h1>Finder</h1>
-        <p>class by classroom</p>
-        <div class="inputs">
-            <div class="input">
-                <div class="left">
-                    <label for="class">*classroom:</label>
-                    <p>numbers,PR1,Boisk1,wf1,wf2,A1,A2,C1</p>
-                </div>
-                <div class="right">
-                    <input type="text" id="class" name="class">
+        <p class="option--class-name">szukaj klasy po numerze lekcji, sali</p>
+        <div class="option">
+            <p>znajdź klasę</p>
 
-                </div>
-
+            <div class="checked-option">
+                <input type="checkbox" id="toggle" />
+                <label for="toggle"></label>
             </div>
-            <div class="input">
-                <div class="left">
+            <p class="active">lekcje w sali</p>
 
-                    <label for="day">*day of the week:</label>
-                    <p>0-4</p>
+        </div>
+        <div class="box">
+
+            <div class="inputs inputs--class-name">
+                <div class="input">
+                    <div class="left">
+                        <label for="class">*Numer klasy:</label>
+                        <p>numery,PR1,Boisk1,wf1,wf2,A1,A2,C1</p>
+                    </div>
+                    <div class="right">
+                        <input type="text" class="class" name="class">
+
+                    </div>
 
                 </div>
+                <div class="input">
+                    <div class="left">
 
-                <div class="right">
+                        <label for="day">*Dzień tygodnia:</label>
+                        <p>;)</p>
 
-                    <input type="text" id="day" name="day">
+                    </div>
+
+                    <div class="right">
+                        <select name="day" class="day">
+                            <option value="0">Poniedziałek</option>
+                            <option value="1">Wtorek</option>
+                            <option value="2">Środa</option>
+                            <option value="3">Czwartek</option>
+                            <option value="4">Piątek</option>
+                        </select>
+                        <!-- <input type="text" id="day" name="day"> -->
+                    </div>
+
+
                 </div>
+                <div class="input">
+                    <div class="left">
 
 
+                        <label for="lesson">*Numer lekcji:</label>
+                        <p>1-15</p>
+
+                    </div>
+
+                    <div class="right">
+
+                        <input type="number" class="lesson" name="lesson" min="1">
+                    </div>
+
+
+                </div>
             </div>
-            <div class="input">
-                <div class="left">
 
 
-                    <label for="lesson">*lesson number:</label>
-                    <p>1-15</p>
+
+            <div class="inputs inputs--class d-none">
+                <div class="input">
+                    <div class="left">
+                        <label for="class">*Numer klasy:</label>
+                        <p>numery,PR1,Boisk1,wf1,wf2,A1,A2,C1</p>
+                    </div>
+                    <div class="right">
+                        <input type="text" class="class" name="class">
+
+                    </div>
 
                 </div>
+                <div class="input">
+                    <div class="left">
 
-                <div class="right">
+                        <label for="day">*Dzień tygodnia:</label>
+                        <p>;)</p>
 
-                    <input type="text" id="lesson" name="lesson">
+                    </div>
+
+                    <div class="right">
+                        <select name="day" class="day">
+                            <option value="0">Poniedziałek</option>
+                            <option value="1">Wtorek</option>
+                            <option value="2">Środa</option>
+                            <option value="3">Czwartek</option>
+                            <option value="4">Piątek</option>
+                        </select>
+
+                    </div>
+
+
                 </div>
-
-
             </div>
+
             <div class="buttons">
-                <div class="button">find <span class="magnifier"><i class='fa-solid fa-magnifying-glass'></i></span>
+                <div class="button">znajdź <span class="magnifier"><i class='fa-solid fa-magnifying-glass'></i></span>
                 </div>
             </div>
-
         </div>
         <div class="result">
             <span class="error"></span>
-            <h4>this class has lessons there:</h4>
-            <span class="killClass"><a id="foundClass" href="http://www.zstrzeszow.pl/plan/" target="_blank"></a></span>
+            <h4>Ta klasa ma tu lekcje:</h4>
+            <span class="killClass" id="foundClass"><a href="http://www.zstrzeszow.pl/plan/" target="_blank"></a></span>
         </div>
     </main>
     <footer>made by ~ <a href="https://kacpep.dev">kacpep.dev</a> </footer>
