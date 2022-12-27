@@ -50,7 +50,7 @@ let getClass = async () => {
 			let info = "";
 			//my server https://webs.k-k.p4.tiktalik.io/
 			info = await fetch(
-				`https://webs.k-k.p4.tiktalik.io/?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}`
+				`http://127.0.0.1:3000/?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}`
 			).then(async (res) => {
 				return [await res.json(), await res.status];
 			});
@@ -58,20 +58,24 @@ let getClass = async () => {
 
 			switch (info[1]) {
 				case 420:
-					error.textContent = info[0].error;
-					error.style.display = "flex";
-					h4.style.display = "none";
-					killClass.style.display = "none";
-
 					break;
 				case 200:
-					h4.style.display = "flex";
-					killClass.style.display = "flex";
-					error.style.display = "none";
+					console.log(info)
+					if (info[0].hasOwnProperty("error")) {
+						error.textContent = info[0].error;
+						error.style.display = "flex";
+						h4.style.display = "none";
+						killClass.style.display = "none";
+					} else {
+						h4.style.display = "flex";
+						killClass.style.display = "flex";
+						error.style.display = "none";
 
-					foundClass.textContent = info[0].error;
-					foundClass.href = foundClass.href + info[0].link;
-					foundClass.textContent = info[0].class;
+						foundClass.textContent = info[0].error;
+						foundClass.href = foundClass.href + info[0].link;
+						foundClass.textContent = info[0].class;
+					}
+
 					break;
 
 				case 500:
