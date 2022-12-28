@@ -16,9 +16,9 @@ I do it after every shift.
 
 ## versions 🆕
 
-`1.0.0` ~ old press little data 
+`v1.0.0` ~ old press little data 
 
-`2.0.0` ~ new press more data if you need
+`v2.0.0` ~ new press more data if you need
 ## API Reference ⚒️
 
 #### get class name
