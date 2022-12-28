@@ -4,13 +4,19 @@ const express = require("express");
 const cors = require("cors");
 const { parse } = require("node-html-parser");
 
+
 let app = express();
 app.use(cors());
 app.use(express.json());
+// const httpsAgent = new https.Agent({
+// 	rejectUnauthorized: false,
+// });
+// axios.defaults.httpsAgent = httpsAgent;
+//if website is https (paln school)
 
 var planRooms = "";
 //this query:
-//http://127.0.0.1:3000/search?searchClass=18&searchDay=1&lesson=1
+//http://127.0.0.1:3000/nameClass?searchClass=18&searchDay=1&lesson=1
 app.listen(3000, async () => {
 	//start server and get all class lesson
 	planRooms = await arrayTableAllClassRooms;

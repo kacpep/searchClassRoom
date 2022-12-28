@@ -13,14 +13,22 @@ which class he was from
 #### Get class name
 
 ```http
-  GET ?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}
+  GET /nameClass?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}
 ```
 
+#### Get class in classroom
 
+```http
+  GET /class?searchClass=${searchClass}&searchDay=${searchDay}
+```
 
 ## Demo
 
 https://finder.kacpep.dev/
+
+## Demo API
+
+https://api.kacpep.dev/
 
 
 ## Author 😎
