@@ -42,18 +42,16 @@ app.use("/", async (req, res) => {
 				//validation day number
 				return res.send("wrong day!");
 			}
-			console.log(searchClass);
-			console.log(lesson);
-			console.log(data.searchDay);
+
 			for (i in planRooms) {
 				//search all
 				// console.log(planRooms[i]);
 
 				//cheking 2 classes in one lesson
 				if (
-					planRooms[i].classRoom == 13 &&
-					planRooms[i].numberLesson == 9 &&
-					planRooms[i].day == 1
+					planRooms[i].classRoom == searchClass &&
+					planRooms[i].numberLesson == lesson &&
+					planRooms[i].day == data.searchDay
 				) {
 					return res.status(200).json(planRooms[i]);
 				}
@@ -72,8 +70,8 @@ let arrayTableAllClassRooms = axios
 
 	.then(async (response) => {
 		html = response.data;
-		let plan = parse(html);
-		let linkA = plan.querySelector("ul").querySelectorAll("a");
+		let schedule = parse(html);
+		let linkA = schedule.querySelector("ul").querySelectorAll("a");
 
 		let ArryaClass = [];
 
@@ -82,18 +80,20 @@ let arrayTableAllClassRooms = axios
 		});
 
 		let allLinks = [];
-		let classNames = [];
 
 		linkA.forEach((item) => {
 			allLinks.push(item.getAttribute("href"));
 		});
+
+		let classNames = [];
+
 		linkA.forEach((item) => {
 			classNames.push(item.childNodes[0]._rawText);
 		});
 
 		console.log();
 
-		let allClass = [];
+		let allClassSchedule = [];
 
 		for (let i in allLinks) {
 			await axios
@@ -104,87 +104,53 @@ let arrayTableAllClassRooms = axios
 					let table = tableClass.querySelector(".tabela");
 					let tr = table.querySelectorAll("tr");
 
-					let lessons = tableClass.querySelectorAll(".l");
-					let numberLesson = tableClass.querySelectorAll(".nr");
-
-					// for (let l in lessons) {
-					// 	console.log(lessons[l].toString());
-					// }
 					for (let t in tr) {
-						let nr = tr[t].querySelectorAll(".nr").toString().slice(15, -5);
-						let lessons = tr[t].querySelectorAll(".l");
+						let nr = tr[t].querySelectorAll(".nr").toString().slice(15, -5); 
+						let lessons = tr[t].querySelectorAll("td");
 						for (let l in lessons) {
-							console.log("up: " + l);
-							lessonName = lessons[l].querySelectorAll(".p");
-							classNumber = lessons[l].querySelectorAll(".s");
-							teacher = lessons[l].querySelectorAll(".n");
+							lessonNameAll = lessons[l].querySelectorAll(".p");
+							classNumberAll = lessons[l].querySelectorAll(".s");
+							teacherAll = lessons[l].querySelectorAll(".n");
 
 							for (let twoL in lessonName) {
-								lessonsInOneDay = lessonName[twoL].childNodes[0]._rawText;
-								classNumberInOneDay = classNumber[twoL].childNodes[0]._rawText;
-								teacherInOneDay = teacher[twoL].childNodes[0]._rawText;
-								console.log("down: " + l);
+								let lesson = lessonNameAll[twoL].childNodes[0]._rawText;
+								try {
+									classNumber = classNumberAll[twoL].childNodes[0]._rawText;
+									teacher = teacherAll[twoL].childNodes[0]._rawText;
 
-								allClass.push({
-									numberLesson: nr,
-									classRoom: classNumberInOneDay,
-									class: classNames[i],
-									day: l,
-									link: allLinks[i],
-									teacher: teacherInOneDay,
-								});
+									allClassSchedule.push({
+										nameLesson: lesson,
+										numberLesson: nr,
+										classRoom: classNumber,
+										class: classNames[i],
+										day: (l - 2).toString(),
+										link: allLinks[i],
+										teacher: teacher,
+										teacherLink: "plany/" + teacher[twoL].getAttribute("href"),
+									});
 
-								// console.log(
-								// 	`${lessonsInOneDay} | ${classNumberInOneDay} | ${teacherInOneDay} | ${nr} | ${classNames[i]} | ${weekday[l]}`
-								// );
+									// console.log(
+									// 	`${lesson} | ${classNumber} | ${teacher} | ${nr} | ${classNames[i]} | ${l-2}`
+									// );
+								} catch {
+									allClassSchedule.push({
+										nameLesson: lesson,
+										numberLesson: nr,
+										classRoom: lesson,
+										class: classNames[i],
+										day: (l - 2).toString(),
+										link: allLinks[i],
+										teacher: undefined,
+										teacherLink: undefined,
+									});
+
+									// console.log(
+									// 	`${lesson} | undefined | undefined | ${nr} | ${classNames[i]} | ${l}`
+									// );
+								}
 							}
 						}
 					}
-					// for (let n in numberLesson) {
-					// 	// console.log(numberLesson[n].childNodes[0]._rawText);
-
-					// 	var lessonName;
-					// 	var classNumber;
-					// 	var teacher;
-					// 	// lessonName =
-					// 	// 	lessons[0].querySelectorAll(".p")[0].childNodes[0]._rawText;
-					// 	// for (let l in lessons) {
-					// 	// 	lessonName = lessons[l].querySelectorAll(".p").toString();
-					// 	// 	classNumber = lessons[l].querySelectorAll(".s").toString();
-					// 	// 	teacher = lessons[l].querySelectorAll(".n").toString();
-					// 	// 	let flag = true;
-					// 	// 	if (lessonName.includes(",")) {
-					// 	// 		flag = false;
-					// 	// 		let lessonsInOneDay = lessonName.split(",");
-					// 	// 		let classNumberInOneDay = classNumber.split(",");
-					// 	// 		let teacherInOneDay = teacher.split(",");
-					// 	// 		for (let oneL in lessonsInOneDay) {
-					// 	// 			console.log(
-					// 	// 				`${lessonsInOneDay[oneL]} | ${classNumberInOneDay[oneL]} | ${teacherInOneDay[oneL]} | ${classNames[i]}`
-					// 	// 			);
-					// 	// 		}
-					// 	// 	}
-					// 	// 	if (flag) {
-					// 	// 		console.log(`${lessonName} | ${classNumber} | ${teacher}`);
-					// 	// 	}
-					// 	// }
-
-					// 	for (let l in lessons) {
-					// 		lessonName = lessons[l].querySelectorAll(".p");
-					// 		classNumber = lessons[l].querySelectorAll(".s");
-					// 		teacher = lessons[l].querySelectorAll(".n");
-					// 		// console.log(teacher);
-					// 		for (let twoL in lessonName) {
-					// 			lessonsInOneDay = lessonName[twoL].childNodes[0]._rawText;
-					// 			classNumberInOneDay =
-					// 				classNumber[twoL].childNodes[0]._rawText;
-					// 			teacherInOneDay = teacher[twoL].childNodes[0]._rawText;
-					// 			console.log(
-					// 				`${lessonsInOneDay} | ${classNumberInOneDay} | ${teacherInOneDay} | ${classNames[i]} | ${numberLesson[n].childNodes[0]._rawText} | `
-					// 			);
-					// 		}
-					// 	}
-					// }
 				})
 				.catch((error) => {
 					// handle error
@@ -192,9 +158,8 @@ let arrayTableAllClassRooms = axios
 					console.log(error);
 				});
 		}
-
 		//geting all class
-		return allClass;
+		return allClassSchedule;
 	})
 	.catch(function (error) {
 		// handle error
