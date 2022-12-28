@@ -17,7 +17,7 @@ app.listen(3000, async () => {
 	console.log(`start`);
 });
 
-app.use("/", async (req, res) => {
+app.use("/nameClass", async (req, res) => {
 	//create api /
 	if (planRooms != "") {
 		let data = req.query;
@@ -36,32 +36,80 @@ app.use("/", async (req, res) => {
 			}
 
 			let lesson = data.lesson;
-			weekday = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"];
+			let searchDay = data.searchDay;
 			//week day
-			if (data.searchDay > 4) {
+			if (searchDay > 4) {
 				//validation day number
-				return res.send("wrong day!");
+				return res.status(200).json({ error: "Zły dzień!" });
 			}
 
 			for (i in planRooms) {
 				//search all
-				// console.log(planRooms[i]);
-
-				//cheking 2 classes in one lesson
 				if (
 					planRooms[i].classRoom == searchClass &&
 					planRooms[i].numberLesson == lesson &&
-					planRooms[i].day == data.searchDay
+					planRooms[i].day == searchDay
 				) {
 					return res.status(200).json(planRooms[i]);
 				}
 			}
-			res.status(200).json({ error: "nobody has lesson in classRoom" });
+			res.status(200).json({ error: "Nikt nie ma lekcji w tej sali!" });
 		} else {
 			res.status(500).json({ error: "bad query!!" });
 		}
 	} else {
 		res.status(500).json({ error: "SERVER STARTING.." });
+	}
+});
+//this query:
+//http://127.0.0.1:3000/class?searchClass=77&searchDay=1
+app.use("/class", async (req, res) => {
+	//create api /
+	if (planRooms != "") {
+		let data = req.query;
+		//all data query
+		if (
+			"searchClass" in data &&
+			"searchDay" in data &&
+			Object.keys(data).length == 2
+		) {
+			//check query is correct
+			let searchClass = data.searchClass;
+			//repere class because query url not accepts #
+			if (searchClass == "PR1") {
+				searchClass = "#" + searchClass;
+			}
+
+			let searchDay = data.searchDay;
+			//week day
+			if (searchDay > 4) {
+				//validation day number
+				return res.status(200).json({ error: "Zły dzień!" });
+			}
+			let dayLesson = [];
+
+			for (i in planRooms) {
+				//search all
+				if (
+					planRooms[i].classRoom == searchClass &&
+					planRooms[i].day == searchDay
+				) {
+					dayLesson.push(planRooms[i]);
+				} 
+			}
+			if (dayLesson.length == 0) {
+				//no lesson in day
+				return res.status(200).json({ error: "Brak lekcji!" });
+			} else {
+				return res
+					.status(200)
+					.json(dayLesson.sort((a, b) => a.numberLesson - b.numberLesson)); //sort by number lesson
+			}
+		} else {
+			return res.status(500).json({ error: "bad query!!" });
+		}
+	} else {
+		return res.status(500).json({ error: "SERVER STARTING.." });
 	}
 });
 
@@ -105,14 +153,14 @@ let arrayTableAllClassRooms = axios
 					let tr = table.querySelectorAll("tr");
 
 					for (let t in tr) {
-						let nr = tr[t].querySelectorAll(".nr").toString().slice(15, -5); 
+						let nr = tr[t].querySelectorAll(".nr").toString().slice(15, -5);
 						let lessons = tr[t].querySelectorAll("td");
 						for (let l in lessons) {
 							lessonNameAll = lessons[l].querySelectorAll(".p");
 							classNumberAll = lessons[l].querySelectorAll(".s");
 							teacherAll = lessons[l].querySelectorAll(".n");
 
-							for (let twoL in lessonName) {
+							for (let twoL in lessonNameAll) {
 								let lesson = lessonNameAll[twoL].childNodes[0]._rawText;
 								try {
 									classNumber = classNumberAll[twoL].childNodes[0]._rawText;
@@ -126,13 +174,14 @@ let arrayTableAllClassRooms = axios
 										day: (l - 2).toString(),
 										link: allLinks[i],
 										teacher: teacher,
-										teacherLink: "plany/" + teacher[twoL].getAttribute("href"),
+										teacherLink: "plany/" + teacherAll[twoL].getAttribute("href"),
 									});
 
 									// console.log(
 									// 	`${lesson} | ${classNumber} | ${teacher} | ${nr} | ${classNames[i]} | ${l-2}`
 									// );
-								} catch {
+								} catch (e){
+									
 									allClassSchedule.push({
 										nameLesson: lesson,
 										numberLesson: nr,
