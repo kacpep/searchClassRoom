@@ -1,9 +1,7 @@
 const axios = require("axios").default;
-var himalaya = require("himalaya");
 const express = require("express");
 const cors = require("cors");
 const { parse } = require("node-html-parser");
-
 
 let app = express();
 app.use(cors());
@@ -101,7 +99,7 @@ app.use("/class", async (req, res) => {
 					planRooms[i].day == searchDay
 				) {
 					dayLesson.push(planRooms[i]);
-				} 
+				}
 			}
 			if (dayLesson.length == 0) {
 				//no lesson in day
@@ -180,14 +178,14 @@ let arrayTableAllClassRooms = axios
 										day: (l - 2).toString(),
 										link: allLinks[i],
 										teacher: teacher,
-										teacherLink: "plany/" + teacherAll[twoL].getAttribute("href"),
+										teacherLink:
+											"plany/" + teacherAll[twoL].getAttribute("href"),
 									});
 
 									// console.log(
 									// 	`${lesson} | ${classNumber} | ${teacher} | ${nr} | ${classNames[i]} | ${l-2}`
 									// );
-								} catch (e){
-									
+								} catch (e) {
 									allClassSchedule.push({
 										nameLesson: lesson,
 										numberLesson: nr,
