@@ -309,19 +309,19 @@ toogle.addEventListener("click", async () => {
 	}
 });
 
-let popup = document.querySelector(".popup--new-version");
+// let popup = document.querySelector(".popup--new-version");
 
-window.addEventListener("load", () => {
-	if (document.cookie != "1") popup.style.display = "flex";
-});
+// window.addEventListener("load", () => {
+// 	if (document.cookie != "1") popup.style.display = "flex";
+// });
 
-popup.addEventListener("click", (e) => {
-	if (e.target.tagName != "P") {
-		popup.style.opacity = "0";
+// popup.addEventListener("click", (e) => {
+// 	if (e.target.tagName != "P") {
+// 		popup.style.opacity = "0";
 
-		setTimeout(() => {
-			popup.style.display = "none";
-			document.cookie = "1";
-		}, 600);
-	}
-});
+// 		setTimeout(() => {
+// 			popup.style.display = "none";
+// 			document.cookie = "1";
+// 		}, 600);
+// 	}
+// });
