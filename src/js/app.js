@@ -45,61 +45,66 @@ let resultVisible = () => {
 	killClass.style.display = "flex";
 	error.style.display = "none";
 };
-let url = "http://127.0.0.1:3000";
+let url = "http://127.0.0.1:3000/";
 
 let getClass = async () => {
 	result.style.display = "none";
 	let moreData = document.querySelector("#moreData").checked;
 
 	foundClass.href = "http://www.zstrzeszow.pl/plan/";
-	if (searchClassInput[0].closest(".d-none") == null) {
-		let searchClass = searchClassInput[0].value;
-		let lesson = lessonInput[0].value;
-		let searchDay = parseInt(searchDayInput[0].value);
-		console.log(`${searchClass} ${lesson} ${searchDay}`);
 
-		if (searchClass != "" && lesson != "") {
-			let rex = /\b[0-4]\b/gm;
-			vaildDay = rex.test(searchDay) ? true : false;
-			rex = /^([1-9]|1[0-5])$/gm;
+	let searchClass = searchClassInput[0].value;
 
-			vaildLesson = rex.test(lesson) ? true : false;
+	let searchDay = parseInt(searchDayInput[0].value);
 
-			if (vaildDay && vaildLesson) {
-				let info = "";
-				//my server https://api.kacpep.dev/
-				info = await fetch(
-					`${url}/nameClass?searchClass=${searchClass}&searchDay=${searchDay}&lesson=${lesson}`
-				).then(async (res) => {
-					return [await res.json(), await res.status];
-				});
-				result.style.display = "flex";
+	if (searchClass != "") {
+		let rex = /\b[0-4]\b/gm;
+		vaildDay = rex.test(searchDay) ? true : false;
 
-				switch (info[1]) {
-					case 200:
-						if (info[0].hasOwnProperty("error")) {
-							errorVisible(info[0].error);
+		if (vaildDay) {
+			let info = "";
+			//my server https://api.kacpep.dev/
+			info = await fetch(`${url}/class?searchClass=${searchClass}&searchDay=${searchDay}`).then(async (res) => {
+				return [await res.json(), await res.status];
+			});
+			result.style.display = "flex";
+
+			switch (info[1]) {
+				case 200:
+					if (info[0].hasOwnProperty("error")) {
+						errorVisible(info[0].error);
+					} else {
+						resultVisible();
+						if (!moreData) {
+							killClass.classList.remove("more");
+
+							foundClass.innerHTML = "";
+							h4.textContent = "W tej sali lekcje mają:";
+							result.style.flexDirection = "column";
+							foundClass.style.marginTop = "20px";
+							let elUl = document.createElement("ul"); //craete element
+							for (let c in info[0]) {
+								let el = document.createElement("a");
+								let elLi = document.createElement("li");
+								elLi.textContent = info[0][c].numberLesson + ".";
+								el.textContent = info[0][c].class;
+								el.href = foundClass.href + info[0][c].link;
+								el.target = "_blank";
+								elLi.appendChild(el);
+								elUl.appendChild(elLi);
+							}
+							foundClass.appendChild(elUl);
 						} else {
 							foundClass.innerHTML = "";
+							h4.textContent = "W tej sali lekcje mają:";
+							result.style.flexDirection = "column";
+							foundClass.style.marginTop = "20px";
+							let elUl = document.createElement("ul"); //craete element
 
-							resultVisible();
-							if (!moreData) {
-								h4.textContent = "Ta klasa ma tu lekcje:";
-								result.style.flexDirection = "row";
-								foundClass.style.marginTop = "0";
-
-								let className = document.createElement("a");
-								className.href = "http://www.zstrzeszow.pl/plan/";
-								className.target = "_blank";
-
-								className.textContent = info[0].error;
-								className.href = foundClass.href + info[0].link;
-								className.textContent = info[0].class;
-								foundClass.appendChild(className);
-							} else {
-								h4.textContent = "Dane: ";
-								result.style.flexDirection = "column";
-								foundClass.style.marginTop = "10px";
+							for (let c in info[0]) {
+								killClass.classList.add("more");
+								let elLi = document.createElement("li");
+								elLi.textContent = info[0][c].numberLesson + ".";
 
 								let className = document.createElement("p");
 								className.textContent = "Klasa: ";
@@ -107,11 +112,11 @@ let getClass = async () => {
 								classNameA.href = "http://www.zstrzeszow.pl/plan/";
 								classNameA.target = "_blank";
 
-								classNameA.textContent = info[0].error;
-								classNameA.href = foundClass.href + info[0].link;
-								classNameA.textContent = info[0].class;
+								classNameA.textContent = info[0][c].error;
+								classNameA.href = foundClass.href + info[0][c].link;
+								classNameA.textContent = info[0][c].class;
 								className.appendChild(classNameA);
-								foundClass.appendChild(className);
+								elLi.appendChild(className);
 
 								let teacher = document.createElement("p");
 								teacher.textContent = "Nauczyciel: ";
@@ -119,142 +124,37 @@ let getClass = async () => {
 								teacherA.href = "http://www.zstrzeszow.pl/plan/";
 								teacherA.target = "_blank";
 
-								teacherA.textContent = info[0].error;
-								teacherA.href = foundClass.href + info[0].teacherLink;
-								teacherA.textContent = info[0].teacher;
+								teacherA.textContent = info[0][c].error;
+								teacherA.href = foundClass.href + info[0][c].teacherLink;
+								teacherA.textContent = info[0][c].teacher;
 								teacher.appendChild(teacherA);
-								foundClass.appendChild(teacher);
+								elLi.appendChild(teacher);
 
 								let lessonName = document.createElement("p");
 								let lessonNameSpan = document.createElement("span");
 								lessonNameSpan.classList.add("subtext");
-								lessonNameSpan.textContent = info[0].nameLesson;
+								lessonNameSpan.textContent = info[0][c].nameLesson;
 								lessonName.textContent = "Lekcja: ";
+
 								lessonName.appendChild(lessonNameSpan);
-
-								foundClass.appendChild(lessonName);
+								elLi.appendChild(lessonName);
+								elUl.appendChild(elLi);
 							}
+							foundClass.appendChild(elUl);
 						}
+						// foundClass.textContent = info[0][0].class;
+					}
+					break;
 
-						break;
-
-					case 500:
-						errorVisible(info[0].error);
-
-						break;
-				}
-			} else {
-				errorVisible("błędna wartość lekcji");
+				case 500:
+					errorVisible(info[0].error);
+					break;
 			}
 		} else {
-			errorVisible("pola nie mogą być puste");
+			errorVisible("błędny dzień");
 		}
 	} else {
-		let searchClass = searchClassInput[1].value;
-
-		let searchDay = parseInt(searchDayInput[1].value);
-
-		if (searchClass != "") {
-			let rex = /\b[0-4]\b/gm;
-			vaildDay = rex.test(searchDay) ? true : false;
-
-			if (vaildDay) {
-				let info = "";
-				//my server https://api.kacpep.dev/
-				info = await fetch(
-					`${url}/class?searchClass=${searchClass}&searchDay=${searchDay}`
-				).then(async (res) => {
-					return [await res.json(), await res.status];
-				});
-				result.style.display = "flex";
-
-				switch (info[1]) {
-					case 200:
-						if (info[0].hasOwnProperty("error")) {
-							errorVisible(info[0].error);
-						} else {
-							resultVisible();
-							if (!moreData) {
-								killClass.classList.remove("more");
-
-								foundClass.innerHTML = "";
-								h4.textContent = "W tej sali lekcje mają:";
-								result.style.flexDirection = "column";
-								foundClass.style.marginTop = "20px";
-								let elUl = document.createElement("ul"); //craete element
-								for (let c in info[0]) {
-									let el = document.createElement("a");
-									let elLi = document.createElement("li");
-									elLi.textContent = info[0][c].numberLesson + ".";
-									el.textContent = info[0][c].class;
-									el.href = foundClass.href + info[0][c].link;
-									el.target = "_blank";
-									elLi.appendChild(el);
-									elUl.appendChild(elLi);
-								}
-								foundClass.appendChild(elUl);
-							} else {
-								foundClass.innerHTML = "";
-								h4.textContent = "W tej sali lekcje mają:";
-								result.style.flexDirection = "column";
-								foundClass.style.marginTop = "20px";
-								let elUl = document.createElement("ul"); //craete element
-
-								for (let c in info[0]) {
-									killClass.classList.add("more");
-									let elLi = document.createElement("li");
-									elLi.textContent = info[0][c].numberLesson + ".";
-
-									let className = document.createElement("p");
-									className.textContent = "Klasa: ";
-									let classNameA = document.createElement("a");
-									classNameA.href = "http://www.zstrzeszow.pl/plan/";
-									classNameA.target = "_blank";
-
-									classNameA.textContent = info[0][c].error;
-									classNameA.href = foundClass.href + info[0][c].link;
-									classNameA.textContent = info[0][c].class;
-									className.appendChild(classNameA);
-									elLi.appendChild(className);
-
-									let teacher = document.createElement("p");
-									teacher.textContent = "Nauczyciel: ";
-									let teacherA = document.createElement("a");
-									teacherA.href = "http://www.zstrzeszow.pl/plan/";
-									teacherA.target = "_blank";
-
-									teacherA.textContent = info[0][c].error;
-									teacherA.href = foundClass.href + info[0][c].teacherLink;
-									teacherA.textContent = info[0][c].teacher;
-									teacher.appendChild(teacherA);
-									elLi.appendChild(teacher);
-
-									let lessonName = document.createElement("p");
-									let lessonNameSpan = document.createElement("span");
-									lessonNameSpan.classList.add("subtext");
-									lessonNameSpan.textContent = info[0][c].nameLesson;
-									lessonName.textContent = "Lekcja: ";
-
-									lessonName.appendChild(lessonNameSpan);
-									elLi.appendChild(lessonName);
-									elUl.appendChild(elLi);
-								}
-								foundClass.appendChild(elUl);
-							}
-							// foundClass.textContent = info[0][0].class;
-						}
-						break;
-
-					case 500:
-						errorVisible(info[0].error);
-						break;
-				}
-			} else {
-				errorVisible("błędny dzień");
-			}
-		} else {
-			errorVisible("pola nie mogą być puste");
-		}
+		errorVisible("pola nie mogą być puste");
 	}
 };
 inputs.forEach((input) => {
@@ -274,40 +174,40 @@ let tooglesIntputs = document.querySelectorAll(".inputs");
 
 let allPToogle = document.querySelectorAll(".option p");
 
-toogle.addEventListener("click", async () => {
-	//change option searching
-	foundClass.innerHTML = "";
+// toogle.addEventListener("click", async () => {
+// 	//change option searching
+// 	foundClass.innerHTML = "";
 
-	result.style.display = "none";
-	//all animation
-	if (toogle.checked) {
-		tooglesIntputs[0].classList.add("animation-out");
-		tooglesIntputs[1].classList.remove("animation-in");
+// 	result.style.display = "none";
+// 	//all animation
+// 	if (toogle.checked) {
+// 		tooglesIntputs[0].classList.add("animation-out");
+// 		tooglesIntputs[1].classList.remove("animation-in");
 
-		allPToogle[1].classList.remove("active");
-		allPToogle[0].classList.add("active");
+// 		allPToogle[1].classList.remove("active");
+// 		allPToogle[0].classList.add("active");
 
-		setTimeout(() => {
-			tooglesIntputs[0].classList.add("d-none");
-			tooglesIntputs[0].classList.remove("animation-out");
-			tooglesIntputs[1].classList.remove("d-none");
-			tooglesIntputs[1].classList.add("animation-in");
-		}, 400);
-	} else {
-		tooglesIntputs[1].classList.add("animation-out");
-		tooglesIntputs[0].classList.remove("animation-in");
+// 		setTimeout(() => {
+// 			tooglesIntputs[0].classList.add("d-none");
+// 			tooglesIntputs[0].classList.remove("animation-out");
+// 			tooglesIntputs[1].classList.remove("d-none");
+// 			tooglesIntputs[1].classList.add("animation-in");
+// 		}, 400);
+// 	} else {
+// 		tooglesIntputs[1].classList.add("animation-out");
+// 		tooglesIntputs[0].classList.remove("animation-in");
 
-		allPToogle[0].classList.remove("active");
-		allPToogle[1].classList.add("active");
+// 		allPToogle[0].classList.remove("active");
+// 		allPToogle[1].classList.add("active");
 
-		setTimeout(() => {
-			tooglesIntputs[1].classList.add("d-none");
-			tooglesIntputs[1].classList.remove("animation-out");
-			tooglesIntputs[0].classList.remove("d-none");
-			tooglesIntputs[0].classList.add("animation-in");
-		}, 400);
-	}
-});
+// 		setTimeout(() => {
+// 			tooglesIntputs[1].classList.add("d-none");
+// 			tooglesIntputs[1].classList.remove("animation-out");
+// 			tooglesIntputs[0].classList.remove("d-none");
+// 			tooglesIntputs[0].classList.add("animation-in");
+// 		}, 400);
+// 	}
+// });
 
 // let popup = document.querySelector(".popup--new-version");
 
