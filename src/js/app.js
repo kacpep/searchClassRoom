@@ -169,6 +169,10 @@ bnt.addEventListener("click", () => {
 	getClass(); //click bnt
 });
 
+searchDayInput[0].addEventListener("change", () => {
+	getClass();
+});
+
 let toogle = document.getElementById("toggle");
 let tooglesIntputs = document.querySelectorAll(".inputs");
 
